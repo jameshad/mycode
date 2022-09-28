@@ -1,0 +1,31 @@
+---
+- name: Day 3 Warm up
+  hosts: looneytunes
+  connection: ssh   # use the connection plugin, ssh.py (this is the default)
+  gather_facts: no   # no need to define ansible_facts in this playbook
+
+  tasks:
+  - name: "Create directory challenge"
+    file:
+     # the var "fileuser" is a host variable and defined in ~/mycode/inv/dev/hosts
+      path: "/home/{{ ansible_user }}/challenge/"
+      state: directory
+
+  - name: "Download file from Github"
+    get_url:
+      url: https://raw.githubusercontent.com/csfeeser/ansible_essentials/main/data/downloadme.txt
+      dest: "/home/{{ ansible_user }}/challenge/downloadme.txt"
+
+  - name: make a copy
+    copy:
+      src: challenge/downloadme.txt
+      dest: challenge/downloadme_edit.txt
+      force: no  # it doesn't matter if the content is changed, only if the file exists
+      remote_src: yes
+
+  - name: "Replacing PLACEHOLDER"
+    replace:
+      path: "/home/{{ ansible_user }}/challenge/downloadme.txt"
+      regexp: "PLACEHOLDER"
+      replace: "JAMES"
+      backup: yes
