@@ -1,0 +1,23 @@
+---
+- name: How to prompt for variables
+  hosts: professors     # connect to the professors group
+  gather_facts: no
+
+  vars_prompt:
+    - name: "ansible_ssh_pass"  # password to connect to the hosts in the professors group
+      prompt: "What is your ssh password?" # Question to ask
+      ## do not reveal the password (optional)
+      private: yes
+      encrypt: "sha512_crypt"
+      salt_size: 3
+
+  tasks:
+    - name: connect to the professors and install figlet
+      yum:
+              name: figlet
+              state: present
+      become: yes
+
+    - name: print out 
+      debug:
+          msg: "{{ ansible_ssh_pass }}"

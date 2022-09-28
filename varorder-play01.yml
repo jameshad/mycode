@@ -1,0 +1,21 @@
+---
+- name: variable test
+  hosts: bender
+  gather_facts: no
+
+  vars:
+      smurfs: purple
+
+  vars_files:
+    - vars/smurfcolor.yml
+
+  vars_prompt:
+    - name: "smurfs"  # Variable name to define
+      prompt: "What color is a smurf?" # Question to ask
+      ## do not reveal the password (optional)
+      private: no
+
+  tasks:
+    - name: output smurf color
+      debug:
+          msg: "A smurf is {{ smurfs }}"
